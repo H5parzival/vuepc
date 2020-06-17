@@ -7,11 +7,11 @@
         <div class="line"></div>
         <span class="t2">用户登陆</span>
       </div>
-      <el-form :model="form">
-        <el-form-item>
+      <el-form class="login-form" :model="form" :rules="rules" ref="form">
+        <el-form-item prop="phone">
           <el-input prefix-icon="el-icon-user" v-model="form.phone" placeholder="请输入手机号"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="password">
           <el-input
             prefix-icon="el-icon-lock"
             v-model="form.password"
@@ -19,7 +19,7 @@
             placeholder="请输入密码"
           ></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="code">
           <el-row>
             <el-col :span="16">
               <el-input prefix-icon="el-icon-key" placeholder="请输入验证码" v-model="form.code"></el-input>
@@ -29,7 +29,7 @@
             </el-col>
           </el-row>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="isChecked">
           <el-checkbox v-model="form.isChecked">
             我已阅读并同意
             <el-link type="primary">用户协议</el-link>和
@@ -37,13 +37,13 @@
           </el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-button class="btn" type="primary">登陆</el-button>
+          <el-button class="btn" type="primary" @click="toLogin">登陆</el-button>
           <br />
           <el-button class="btn" type="primary">注册</el-button>
         </el-form-item>
       </el-form>
     </div>
-    <img class="right" src="/assets/img/login_banner_ele.png" alt />
+    <img class="right" src="@/assets/img/login_banner_ele.png" alt />
   </div>
 </template>
 
@@ -55,9 +55,52 @@ export default {
       form: {
         phone: "", //手机号
         password: "", //密码
+        code: "",
         isChecked: false
+      },
+      rules: {
+        phone: [
+          {
+            required: true,
+            message: "请输入手机号",
+            trigger: "change"
+          },
+          { min: 11, max: 11, message: "请输入11位手机号", trigger: "change" }
+        ],
+        password: [
+          {
+            required: true,
+            message: "请输入密码",
+            trigger: "change"
+          },
+          { min: 6, max: 12, message: "请输入6-12位密码", trigger: "change" }
+        ],
+        code: [
+          { required: true, message: "请输入验证码", trigger: "change" },
+          {
+            min: 4,
+            message: "请输入4位验证码",
+            trigger: "change"
+          }
+        ],
+        isChecked: [
+          { required: true, message: "请勾选协议", trigger: "change" }
+        ]
       }
     };
+  },
+  methods: {
+    toLogin() {
+      this.$refs.form.validate(result => {
+       
+        if (!result) {
+          this.$message({
+            message: "验证不通过",
+            type: "warning"
+          });
+        }
+      });
+    }
   }
 };
 </script>
@@ -110,7 +153,7 @@ export default {
         color: rgba(13, 12, 12, 1);
       }
     }
-    .login-form {
+   .login-form {
       .el-input__inner {
         height: 45px;
       }
@@ -120,16 +163,16 @@ export default {
       .code {
         width: 100%;
         height: 45px;
-      
       }
-    }
-    .btn {
-      width: 100%;
-      &:nth-child(1) {
-        margin-bottom: 26px;
+      .btn {
+        width: 100%;
+        &:nth-child(1) {
+          margin-bottom: 26px;
+        }
       }
     }
   }
+
   .right {
     width: 633px;
     height: 435px;
