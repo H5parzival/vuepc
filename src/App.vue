@@ -1,19 +1,17 @@
 <template>
   <div class="app">
     <!-- 路由出口 -->
-    
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-export default {};
+export default {}
 </script>
 
 <style>
 @import url(~@/style/base.css);
 .app {
-  
   height: 100%;
 }
 </style>
